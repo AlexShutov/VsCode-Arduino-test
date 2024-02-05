@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define BLINK_DELAY 10000
+#define BLINK_DELAY 100
 
 // put function declarations here:
 int myFunction(int, int);
