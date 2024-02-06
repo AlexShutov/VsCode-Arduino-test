@@ -1,47 +1,66 @@
 #include <Arduino.h>
+#include <Adafruit_MMC56x3.h>
 
 #define BLINK_DELAY 100
 
-uint16_t counter;
+Adafruit_MMC5603 mmc = Adafruit_MMC5603(12345);
 
-// put function declarations here:
-int myFunction(int, int);
 void initSerial();
 void printStringToSerial();
 void establishContact();
+void readAndPrintSensorDataToUart();
 
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  counter = 0;
-  initSerial();
+void setup(void) {
+  Serial.begin(115200);
+  while (!Serial)
+    delay(10); // will pause Zero, Leonardo, etc until serial console opens
+
+  Serial.println("Adafruit_MMC5603 Magnetometer Test");
+  Serial.println("");
+
+  /* Initialise the sensor */
+  if (!mmc.begin(MMC56X3_DEFAULT_ADDRESS, &Wire)) {  // I2C mode
+    /* There was a problem detecting the MMC5603 ... check your connections */
+    Serial.println("Ooops, no MMC5603 detected ... Check your wiring!");
+    while (1) delay(10);
+  }
+
+  /* Display some basic information on this sensor */
+  mmc.printSensorDetails();
 }
 
-void loop() {
-  // turn the LED on (HIGH is the voltage level)
-  digitalWrite(LED_BUILTIN, HIGH);
-  // wait for a second
-  delay(BLINK_DELAY);
-  // turn the LED off by making the voltage LOW
-  digitalWrite(LED_BUILTIN, LOW);
-   // wait for a second
-  delay(BLINK_DELAY);
+void loop(void) {
+  // Get a new sensor event 
+  sensors_event_t event;
+  mmc.getEvent(&event);
 
-  printStringToSerial();
+  // Display the results (magnetic vector values are in micro-Tesla (uT))
+  Serial.print("X: ");
+  Serial.print(event.magnetic.x);
+  Serial.print("  ");
+  Serial.print("Y: ");
+  Serial.print(event.magnetic.y);
+  Serial.print("  ");
+  Serial.print("Z: ");
+  Serial.print(event.magnetic.z);
+  Serial.print("  ");
+  Serial.println("uT");
+
+  // Read and display temperature
+  float temp_c = mmc.readTemperature();
+  Serial.print("Temp: "); Serial.print(temp_c); Serial.println(" *C");
+  // Delay before the next sample
+  delay(100);
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+void readAndPrintSensorDataToUart() {
+  
 }
 
 void initSerial() {
   Serial.begin(9600);
-  while (!Serial) {}
+  while (!Serial) {
+    delay(10);
+  }
   // establishContact();
-}
-
-void printStringToSerial() {
-  Serial.print("iteration #");
-  Serial.print(counter++);
-  Serial.println(" ..");
 }
