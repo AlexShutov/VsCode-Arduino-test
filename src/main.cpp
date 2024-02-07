@@ -1,47 +1,19 @@
 #include <Arduino.h>
+#include <Adafruit_MMC56x3.h>
 
-#define BLINK_DELAY 100
+#include "sensor/MagneticSensorReader.h"
+#include "test/SensorTestMMC56.h"
 
-uint16_t counter;
+using SensorTests::SensorTestMMC56;
 
-// put function declarations here:
-int myFunction(int, int);
-void initSerial();
-void printStringToSerial();
-void establishContact();
+SensorTestMMC56 test = SensorTestMMC56();
 
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  counter = 0;
-  initSerial();
+void setup(void) {
+  test.setup();
 }
 
-void loop() {
-  // turn the LED on (HIGH is the voltage level)
-  digitalWrite(LED_BUILTIN, HIGH);
-  // wait for a second
-  delay(BLINK_DELAY);
-  // turn the LED off by making the voltage LOW
-  digitalWrite(LED_BUILTIN, LOW);
-   // wait for a second
-  delay(BLINK_DELAY);
-
-  printStringToSerial();
+void loop(void) {
+  test.performTest();
+  delay(10);
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
-
-void initSerial() {
-  Serial.begin(9600);
-  while (!Serial) {}
-  // establishContact();
-}
-
-void printStringToSerial() {
-  Serial.print("iteration #");
-  Serial.print(counter++);
-  Serial.println(" ..");
-}
