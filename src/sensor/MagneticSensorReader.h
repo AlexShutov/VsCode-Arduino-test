@@ -8,7 +8,7 @@
 
 #ifndef __MAGNETIC_SENSOR_READER_H__
 #define __MAGNETIC_SENSOR_READER_H__
-#include <Arduino.h>
+#include "SensorReadings.h"
 
 extern "C" {
 };
@@ -16,31 +16,31 @@ extern "C" {
 namespace MagneticSensor {
 	
 
-class ReadingCallback {
+class MagneticSensorReader {
+
 private: 	
 public:
-	virtual void onMagneticReading(int* readingsReceiver) = 0;	
-};
-
-class MagneticSensorReader
-{
-//variables
-public:
-protected:
-private:
 	
-//functions
-public:
-	static void initSensorReader(void);
+	// TODO: implementations will use default I2C bus address for now
+	virtual void initSensor() = 0;
+	virtual void shutdownSensor() = 0;
+
+	/**
+	 * Perform sensor calibration (TODO)
+	*/
+	virtual void calibrateSensor() = 0;
+	
+
+	virtual void getSensorReading(SensorReading* readingReceiver) = 0;
+	virtual SensorReading* getSensorReading() = 0;
 	
 	MagneticSensorReader();
-	~MagneticSensorReader();
+	// free some resources
+	virtual ~MagneticSensorReader();
+
 protected:
 private:
-	MagneticSensorReader( const MagneticSensorReader &c );
-	MagneticSensorReader& operator=( const MagneticSensorReader &c );
-
-}; //MagneticSensorReader
+};
 
 }
 #endif //__MAGNETIC_SENSOR_READER_H__
