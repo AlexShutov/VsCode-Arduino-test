@@ -30,6 +30,7 @@ void SensorTestMMC56::performTest() {
     sensors_event_t event;
     mmc.getEvent(&event);
 
+
     // Display the results (magnetic vector values are in micro-Tesla (uT))
     Serial.print("X: ");
     Serial.print(event.magnetic.x);

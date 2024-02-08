@@ -8,6 +8,7 @@
 
 #ifndef __MMC56_SENSOR_READER_H__
 #define __MMC56_SENSOR_READER_H__
+#include <Adafruit_MMC56x3.h>
 #include "SensorReadings.h"
 #include "MagneticSensorReader.h"
 
@@ -15,7 +16,6 @@ extern "C" {
 };
 
 namespace MagneticSensor {
-	
 
 class MMC56SensorReader: MagneticSensorReader {
 
@@ -23,7 +23,7 @@ private:
 public:
 	
 	// TODO: implementations will use default I2C bus address for now
-	virtual void initSensor();
+	virtual bool initSensor(int sensorId, TwoWire* wire = 0);
 	virtual void shutdownSensor();
 
 	/**
@@ -41,6 +41,10 @@ public:
 
 protected:
 private:
+	Adafruit_MMC5603 driver;
+	SensorReading currentReading;
+	// library reading buffer
+	sensors_event_t sensorReading;
 };
 
 }

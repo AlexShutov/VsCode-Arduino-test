@@ -22,7 +22,7 @@ private:
 public:
 	
 	// TODO: implementations will use default I2C bus address for now
-	virtual void initSensor() = 0;
+	virtual bool initSensor(int sensorId, TwoWire* wire = 0) = 0;
 	virtual void shutdownSensor() = 0;
 
 	/**

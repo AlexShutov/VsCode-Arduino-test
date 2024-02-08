@@ -9,14 +9,13 @@ struct SensorReading {
     float x_value;
     float y_value;
     float z_value;
-	float temperature;
 
 	bool operator==(SensorReading &other) {
 		return x_value == other.x_value &&
             y_value == other.y_value &&
-            z_value == other.z_value &&
-            temperature == other.temperature;
+            z_value == other.z_value;
 	}
+    
 	bool operator!=(SensorReading &op2) {
 		return !this->operator ==(op2);
 	}
